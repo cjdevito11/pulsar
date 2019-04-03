@@ -8,6 +8,9 @@
 
 package fxwindowtest;
 
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,14 +28,17 @@ import javafx.stage.Stage;
 
 public class FxWindowTest extends Application {
     
+     File file = new File("C:\\Users\\CJ\\Documents\\NetBeansProjects\\fxWindowTest\\src\\fxwindowtest\\file.txt"); 
+     File realFile = new File("C:\\Users\\CJ\\Documents\\NetBeansProjects\\fxWindowTest\\src\\fxwindowtest\\inlist_rsp_Cepheid"); 
+    
     @Override
     public void start(Stage primaryStage) {
         
         Text scenetitle = new Text("Input");
         scenetitle.setId("title");
         
-        Label starName = new Label("Model Name: ");
-        TextField starTextField = new TextField();
+        Label modelName = new Label("Model Name: ");
+        TextField modelTextField = new TextField();
         
         Label x = new Label("X: ");
         TextField xTextField = new TextField();
@@ -61,6 +67,79 @@ public class FxWindowTest extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("You Clicked The Button!");
+                System.out.println("Model  : " + modelTextField.getText());
+                System.out.println("X      : " + xTextField.getText());
+                System.out.println("Z      : " + zTextField.getText());
+                System.out.println("Mass   : " + massTextField.getText());
+                System.out.println("Lumin  : " + lumTextField.getText());
+                System.out.println("Temper : " + tempTextField.getText());
+                System.out.println("Period : " + periodTextField.getText());
+                
+                
+                 
+  
+  BufferedReader br = null; 
+  FileWriter writer = null;
+  
+  
+                try {
+                    br = new BufferedReader(new FileReader(realFile));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(FxWindowTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+  
+      
+                            
+  String line;
+  String oldContent = "";
+  
+  String oldX = "";
+  String newX = "   RSP_X = " + xTextField.getText();
+  
+                try {
+                    while ((line = br.readLine()) != null) {
+                        oldContent = oldContent + line + System.lineSeparator();
+                        if(line.contains("RSP_X = ") ){
+                             oldX = line;
+                        }
+                    }
+                                           
+                           newX = oldContent.replaceAll(oldX, newX);
+                           writer = new FileWriter(realFile);
+                           writer.write(newX);
+                           writer.close();    
+                    
+                    
+                    
+                    
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(FxWindowTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+                
+                
+                /*
+                 try {
+                    while (br.readLine().contains("x: ")) 
+                        System.out.println(br.readLine());
+                } catch (IOException ex) {
+                    Logger.getLogger(FxWindowTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                      try {
+                              writer = new FileWriter(file);
+                            } catch (IOException ex) {
+                                 Logger.getLogger(FxWindowTest.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                      
+                            
+                            writer.write("x: " + xTextField.getText());
+                            
+                            writer.close();
+                            
+                */
             }
         });
         
@@ -72,8 +151,8 @@ public class FxWindowTest extends Application {
         
         layout.add(scenetitle, 0, 0);
         
-        layout.add(starName, 0, 2);
-        layout.add(starTextField,1,2);
+        layout.add(modelName, 0, 2);
+        layout.add(modelTextField,1,2);
         
         layout.add(x, 0, 3);
         layout.add(xTextField,1,3);
